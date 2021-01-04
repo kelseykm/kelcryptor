@@ -35,11 +35,11 @@ Options:
 * -v, --version             Show kelcryptor version number
 
 Note:
-    1) Input files MUST be regular files
-    2) The file paths can be either relative or absolute
-    3) For multi-file mode, the multiple files are added as arguments after the program name (kelcryptor.py)
-    4) There MUST be more than one file for multi-file mode
-    5) For single-file mode, no file arguments should be added after the program name
+    1. Input files MUST be regular files
+    2. The file paths can be either relative or absolute
+    3. For multi-file mode, the multiple files are added as arguments after the program name (kelcryptor.py)
+    4. There MUST be more than one file for multi-file mode
+    5. For single-file mode, no file arguments should be added after the program name
 
 Examples:
 *   kelcryptor.py ./foo ./bar     # Start kelcryptor in multi-file mode for files foo and bar
