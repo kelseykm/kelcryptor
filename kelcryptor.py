@@ -14,7 +14,7 @@ import threading
 from Crypto.Cipher import AES
 from Crypto.Protocol.KDF import scrypt
 
-version = 1.5
+version = 1.6
 red = "\033[1;31m"
 green = "\033[1;32m"
 brown = "\033[1;33m"
@@ -49,19 +49,17 @@ class Encryptor(object):
         self.salt_size = 32
         self.key_size = 32
         self.tag_size = 16
+        self.number_of_chunks = 0
+        self.number_of_read_chunks = 0
 
     def number_chunks(self):
-        self.number_of_chunks = 0
+        file_size = os.stat(self.infile_object.name).st_size
 
-        def counter():
-            while True:
-                chunk = self.infile_object.read(self.chunk_size)
-                if not chunk:
-                    return
-                yield "chunk"
-
-        for _ in counter():
-            self.number_of_chunks += 1
+        x = file_size/self.chunk_size
+        if type(x) is float:
+            self.number_of_chunks = x.__floor__() + 1
+        else:
+            self.number_of_chunks = x
 
     def read_chunks(self, decrypt=False):
         if decrypt:
@@ -73,12 +71,14 @@ class Encryptor(object):
                 if not chunk:
                     return
                 yield chunk
+                self.number_of_read_chunks += 1
         else:
             while True:
                 chunk = self.infile_object.read(self.chunk_size)
                 if chunks_left == 1:
                     self.tag = chunk[-self.tag_size:]
                     yield chunk[:-self.tag_size]
+                    self.number_of_read_chunks += 1
                     chunks_left -= 1
                     return
                 if chunks_left == 2:
@@ -87,16 +87,19 @@ class Encryptor(object):
                         x = self.tag_size - len(chunk2)
                         self.tag = chunk[-x:] + chunk2
                         yield chunk[:-x]
+                        self.number_of_read_chunks += 2
                         chunks_left -= 2
                         return
                     else:
                         self.tag = chunk2[-self.tag_size:]
                         yield chunk
                         yield chunk2[:-self.tag_size]
+                        self.number_of_read_chunks += 2
                         chunks_left -= 2
                         return
                 else:
                     yield chunk
+                    self.number_of_read_chunks += 1
                     chunks_left -= 1
 
     def encryption_key(self, salt=None):
@@ -161,31 +164,22 @@ class Shredder(object):
     def generate_randoms(self, number_to_generate):
         return os.urandom(number_to_generate)
 
-    def number_chunks(self):
-        self.number_of_chunks = 0
-        def counter():
-            while True:
-                chunk = self.file_object.read(self.chunk_size)
-                if not chunk:
-                    return
-                yield "chunk"
-
-        for _ in counter():
-            self.number_of_chunks += 1
+    @property
+    def number_of_chunks(self):
+        x = self.file_size/self.chunk_size
+        if type(x) is float:
+            return x.__floor__() + 1
+        else:
+            return x
 
     @property
     def length_of_last_chunk(self):
-        self.file_object.seek(0)
-        chunks_left = self.number_of_chunks
-
-        while True:
-            chunk = self.file_object.read(self.chunk_size)
-            if chunks_left == 1:
-                return len(chunk)
-            chunks_left -= 1
+        if self.file_size % self.chunk_size == 0:
+            return self.chunk_size
+        else:
+            return self.file_size % self.chunk_size
 
     def shred_file(self):
-        self.number_chunks()
         passes = self.number_of_chunks - 1
         last = self.length_of_last_chunk
 
@@ -235,8 +229,17 @@ class Autocomplete(object):
             text += "/"
         return [x for x in glob.glob(text + "*")][state]
 
+def progress_status(e_obj, caller):
+    """Shows encryption/decryption progress"""
+    while True:
+        if e_obj.number_of_chunks == e_obj.number_of_read_chunks or cycle_stop:
+            break
+        sys.stdout.write(f"{blue}[INFO]{normal} {green}[ {white_bold}{round(e_obj.number_of_read_chunks/e_obj.number_of_chunks*100, 1)}{green} % ] {caller}...{normal}")
+        sys.stdout.write("\r")
+        sys.stdout.flush()
+
 def cycler(caller):
-    """Prints cycling animation as user waits for encryption/decryption to be finished"""
+    """Prints cycling animation as user waits for shredding to be finished"""
 
     while not cycle_stop:
         for c in cycle:
@@ -253,20 +256,22 @@ def encrypt_func(password, infile, outfile):
     global cycle_stop
     cycle_stop = False
 
-    thread = threading.Thread(target=cycler, args=("ENCRYPTING",))
-    thread.start()
-
     if time_check:
         start_time = time.perf_counter()
 
     try:
         with open(infile, "rb") as f, open(outfile, "wb") as g:
             encryption_object = Encryptor(password, f, g)
+
+            encryption_object.number_chunks()
+            thread = threading.Thread(target=progress_status, args=(encryption_object, "ENCRYPTED"))
+            thread.start()
+
             encryption_object.encrypt()
     except:
         cycle_stop = True
         thread.join()
-        print(f"{red}[ERROR]{normal} {white_bold}{infile}{normal} ENCRYPTION FAILED!")
+        print(f"{red}[ERROR]{normal} {brown}{infile}{normal} ENCRYPTION FAILED!")
         if os.path.exists(outfile):
             os.remove(outfile)
         return
@@ -274,9 +279,8 @@ def encrypt_func(password, infile, outfile):
     if time_check:
         stop_time = time.perf_counter()
 
-    cycle_stop = True
     thread.join()
-    print(f"{blue}[INFO]{normal} {white_bold}{infile}{normal} ENCRYPTION SUCCESSFUL!")
+    print(f"{blue}[INFO]{normal} {brown}{infile}{normal} ENCRYPTION SUCCESSFUL!")
 
     if time_check:
         print(f"{blue}[INFO]{normal} FINISHED IN {brown}{round(stop_time-start_time,2)}{normal} SECONDS")
@@ -287,21 +291,23 @@ def decrypt_func(password, infile, outfile):
     global cycle_stop
     cycle_stop = False
 
-    thread = threading.Thread(target=cycler, args=("DECRYPTING",))
-    thread.start()
-
     if time_check:
         start_time = time.perf_counter()
 
     try:
         with open(infile, "rb") as f, open(outfile, "wb") as g:
             decryption_object = Encryptor(password, f, g)
+
+            decryption_object.number_chunks()
+            thread = threading.Thread(target=progress_status, args=(decryption_object, "DECRYPTED"))
+            thread.start()
+
             decryption_object.decrypt()
     except: #ValueError("MAC check failed")
         cycle_stop = True
         thread.join()
 
-        print(f"{red}[ERROR]{normal} {white_bold}{infile}{normal} DECRYPTION FAILED!")
+        print(f"{red}[ERROR]{normal} {brown}{infile}{normal} DECRYPTION FAILED!")
         print(f"{blue}[INFO]{normal} EITHER THE PASSWORD YOU ENTERED IS WRONG OR THE ENCRYPTED FILE HAS BEEN CORRUPTED")
         if os.path.exists(outfile):
             os.remove(outfile)
@@ -310,9 +316,8 @@ def decrypt_func(password, infile, outfile):
     if time_check:
         stop_time = time.perf_counter()
 
-    cycle_stop = True
     thread.join()
-    print(f"{blue}[INFO]{normal} {white_bold}{infile}{normal} DECRYPTION SUCCESSFUL!")
+    print(f"{blue}[INFO]{normal} {brown}{infile}{normal} DECRYPTION SUCCESSFUL!")
 
     if time_check:
         print(f"{blue}[INFO]{normal} FINISHED IN {brown}{round(stop_time-start_time,2)}{normal} SECONDS")
