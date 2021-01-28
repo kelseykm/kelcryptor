@@ -14,7 +14,7 @@ import threading
 from Crypto.Cipher import AES
 from Crypto.Protocol.KDF import scrypt
 
-version = 1.6
+version = "1.6.2"
 red = "\033[1;31m"
 green = "\033[1;32m"
 brown = "\033[1;33m"
@@ -55,11 +55,12 @@ class Encryptor(object):
     def number_chunks(self):
         file_size = os.stat(self.infile_object.name).st_size
 
-        x = file_size/self.chunk_size
-        if type(x) is float:
-            self.number_of_chunks = x.__floor__() + 1
+        if file_size == 0:
+            self.number_of_chunks = file_size
+        elif not file_size % self.chunk_size == 0:
+            self.number_of_chunks = file_size // self.chunk_size + 1
         else:
-            self.number_of_chunks = x
+            self.number_of_chunks = file_size/self.chunk_size
 
     def read_chunks(self, decrypt=False):
         if decrypt:
