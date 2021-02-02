@@ -1,6 +1,6 @@
 # kelcryptor
 
-**kelcryptor is an advanced cross-platform python encryption program with the following features:**
+**kelcryptor is a python encryption program with the following features:**
 1. AES-256-GCM encryption
 2. Uses scrypt KDF to derive cryptographically strong encryption keys from users' passwords
 3. File shredding capabilities
