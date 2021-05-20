@@ -10,6 +10,7 @@ import readline
 import glob
 import time
 import sys
+import re
 import threading
 from Crypto.Cipher import AES
 from Crypto.Protocol.KDF import scrypt
@@ -38,7 +39,7 @@ banner = """%s
                                                     `=':-..-'`                .
 %s"""%(green,normal)
 
-class Encryptor(object):
+class Encryptor:
     """Main encryption class"""
 
     def __init__(self, password, infile_object, outfile_object):
@@ -142,7 +143,7 @@ class Encryptor(object):
 
         cipher.verify(self.tag)
 
-class Shredder(object):
+class Shredder:
     """
     Main file shredder class
 
@@ -222,16 +223,13 @@ class Shredder(object):
     def delete_file(self):
         os.remove(self.file_name)
 
-class Autocomplete(object):
+def autocomplete(text, state):
     """Enables autocompletion of lines"""
-
-    def autocomplete_path(self, text, state):
-        line = readline.get_line_buffer().split()
-        if "~" in text:
-            text = os.path.expanduser("~")
-        if os.path.isdir(text):
-            text += "/"
-        return [x for x in glob.glob(text + "*")][state]
+    if "~" in text:
+        text = re.sub(r'~', os.path.expanduser("~"), text)
+    if os.path.isdir(text) and not text.endswith("/"):
+        text += "/"
+    return glob.glob(text + "*")[state]
 
 def progress_status(e_obj, caller):
     """Shows encryption/decryption progress"""
@@ -435,10 +433,9 @@ def single_file_input(intention):
 
     global shred
 
-    t = Autocomplete()
     readline.set_completer_delims("\t")
     readline.parse_and_bind("tab: complete")
-    readline.set_completer(t.autocomplete_path)
+    readline.set_completer(autocomplete)
 
     if intention == "ENCRYPTED":
         shredding_intention = input(f"{green}[INPUT]{normal} WOULD YOU LIKE THE INPUT FILE TO BE SHREDDED AFTER ENCRYPTION? (Y/N) ")
