@@ -15,7 +15,7 @@ import threading
 from Crypto.Cipher import AES
 from Crypto.Protocol.KDF import scrypt
 
-version = "1.6.3"
+version = "1.6.4"
 red = "\033[1;31m"
 green = "\033[1;32m"
 brown = "\033[1;33m"
