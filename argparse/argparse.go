@@ -16,6 +16,7 @@ func verifyFiles(files []string) (filesExist bool, fakeFiles []string) {
 	filesExist = true
 
 	for _, file := range files {
+		// TODO: check for existence properly
 		openFile, err := os.Open(file)
 		if err != nil {
 			filesExist = false
