@@ -2,6 +2,8 @@ package colour
 
 // Exported colours
 const (
+	Normal = "\033[0;39m"
+
 	Red   = "\033[31m"
 	Green = "\033[32m"
 	Brown = "\033[33m"
