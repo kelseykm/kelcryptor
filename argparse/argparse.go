@@ -12,17 +12,14 @@ var timeTakenFlag bool
 var encryptFlag bool
 var decryptFlag bool
 
-func verifyFiles(files []string) (filesExist bool, fakeFiles []string) {
-	filesExist = true
-
+func verifyFiles(files []string) (nonExistentFiles, nonRegularFiles []string) {
 	for _, file := range files {
-		// TODO: check for existence properly
-		openFile, err := os.Open(file)
+		fileInfo, err := os.Stat(file)
 		if err != nil {
-			filesExist = false
-			fakeFiles = append(fakeFiles, file)
+			nonExistentFiles = append(nonExistentFiles, file)
+		} else if !fileInfo.Mode().IsRegular() {
+			nonRegularFiles = append(nonRegularFiles, file)
 		}
-		openFile.Close()
 	}
 
 	return
@@ -74,8 +71,8 @@ func ParseFlags() (timeTaken, encrypt, decrypt bool, files []string) {
 		os.Exit(2)
 	}
 
-	filesOk, badFiles := verifyFiles(files)
-	if !filesOk {
+	nonExistentFiles, nonRegularFiles := verifyFiles(files)
+	if len(nonExistentFiles) != 0 {
 		errorString = fmt.Sprintf(
 			"%serror:%s %ssome files do not exist:%s\n",
 			colour.RedBold,
@@ -85,15 +82,44 @@ func ParseFlags() (timeTaken, encrypt, decrypt bool, files []string) {
 		)
 		fmt.Fprintf(flag.CommandLine.Output(), errorString)
 
-		for index, badFile := range badFiles {
+		for index, file := range nonExistentFiles {
 			fmt.Printf(
 				"  %v: %s%s%s\n",
 				index+1,
 				colour.BrownItalicised,
-				badFile,
+				file,
 				colour.Normal,
 			)
+			if index+1 == len(nonRegularFiles) {
+				fmt.Println()
+			}
 		}
+		flag.Usage()
+		os.Exit(2)
+	} else if len(nonRegularFiles) != 0 {
+		errorString = fmt.Sprintf(
+			"%serror:%s %ssome files are not regular files:%s\n",
+			colour.RedBold,
+			colour.Normal,
+			colour.WhiteBold,
+			colour.Normal,
+		)
+		fmt.Fprintf(flag.CommandLine.Output(), errorString)
+
+		for index, file := range nonRegularFiles {
+			fmt.Printf(
+				"  %v: %s%s%s\n",
+				index+1,
+				colour.BrownItalicised,
+				file,
+				colour.Normal,
+			)
+			if index+1 == len(nonRegularFiles) {
+				fmt.Println()
+			}
+		}
+		flag.Usage()
+		os.Exit(2)
 	}
 
 	return
