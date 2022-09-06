@@ -90,7 +90,7 @@ func ParseFlags() (timeTaken, encrypt, decrypt bool, files []string) {
 				file,
 				colour.Normal,
 			)
-			if index+1 == len(nonRegularFiles) {
+			if index+1 == len(nonExistentFiles) {
 				fmt.Println()
 			}
 		}
