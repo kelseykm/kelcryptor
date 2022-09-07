@@ -8,6 +8,7 @@ import (
 	"crypto/sha256"
 	"io"
 	"os"
+	"regexp"
 
 	"golang.org/x/crypto/scrypt"
 )
@@ -154,7 +155,13 @@ func DecryptFile(password, src string) error {
 	_, err = file.Read(salt)
 	checkErr(err)
 
-	dest := src + ".dec"
+	var dest string
+	if re, _ := regexp.Compile("enc$"); re.Match([]byte(src)) {
+		dest = string(re.ReplaceAll([]byte(src), []byte("dec")))
+	} else {
+		dest = src + ".dec"
+	}
+
 	destFile, err := os.Create(dest)
 	checkErr(err)
 	defer func() {
