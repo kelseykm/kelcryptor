@@ -42,7 +42,7 @@ func checkErr(err error) {
 
 // EncryptFile encrypts the src using a key derived from the password
 // and writes the encrypted file to dest
-func EncryptFile(password, src, dest string) {
+func EncryptFile(password, src string) {
 	key, salt := getKey([]byte(password), nil, keySize)
 	passwordHash, passwordSalt := getKey([]byte(password), nil, passwordHashSize)
 
@@ -55,6 +55,7 @@ func EncryptFile(password, src, dest string) {
 		checkErr(err)
 	}()
 
+	dest := src + ".enc"
 	destFile, err := os.Create(dest)
 	checkErr(err)
 	defer func() {
@@ -124,7 +125,7 @@ func (f fileModified) Error() string {
 
 // DecryptFile decrypts the src with a key derived from
 // the password and writes the decrypted file to the dest
-func DecryptFile(password, src, dest string) error {
+func DecryptFile(password, src string) error {
 	file, err := os.Open(src)
 	checkErr(err)
 	defer func() {
@@ -153,6 +154,7 @@ func DecryptFile(password, src, dest string) error {
 	_, err = file.Read(salt)
 	checkErr(err)
 
+	dest := src + ".dec"
 	destFile, err := os.Create(dest)
 	checkErr(err)
 	defer func() {
