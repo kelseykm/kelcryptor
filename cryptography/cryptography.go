@@ -133,7 +133,7 @@ func DecryptFile(password, src, dest string) error {
 	}()
 
 	storedHmac := make([]byte, fileHmacSize)
-	_, err := file.Read(storedHmac)
+	_, err = file.Read(storedHmac)
 	checkErr(err)
 
 	passwordHash := make([]byte, passwordHashSize)
