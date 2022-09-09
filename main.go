@@ -16,17 +16,22 @@ func main() {
 
 	VerifyFiles(files)
 
+	password, err := ScanPassword()
+	if err != nil {
+		panic(err)
+	}
+
 	switch {
 	case toEncrypt:
 		for _, file := range files {
-			cryptography.EncryptFile("password", file)
+			cryptography.EncryptFile(password, file)
 			fmt.Printf("%s[INFO]%s%s %s%s encrypted\n",
 				colour.BlueBackground, colour.Normal, colour.WhiteBold, file, colour.Normal,
 			)
 		}
 	case toDecrypt:
 		for _, file := range files {
-			err := cryptography.DecryptFile("password", file)
+			err := cryptography.DecryptFile(password, file)
 			if err != nil {
 				panic(err)
 			}
