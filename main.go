@@ -1,9 +1,6 @@
 package main
 
 import (
-	"fmt"
-
-	"github.com/kelseykm/kelcryptor/colour"
 	"github.com/kelseykm/kelcryptor/cryptography"
 )
 
@@ -27,23 +24,11 @@ func main() {
 	case toEncrypt:
 		for _, file := range files {
 			cryptography.EncryptFile(password, file)
-			fmt.Printf("%s %s %s",
-				colour.Info(),
-				colour.FileName(file),
-				colour.Message("encrypted\n"),
-			)
 		}
 	case toDecrypt:
 		for _, file := range files {
 			err := cryptography.DecryptFile(password, file)
-			if err != nil {
-				panic(err)
-			}
-			fmt.Printf("%s %s %s",
-				colour.Info(),
-				colour.FileName(file),
-				colour.Message("decrypted\n"),
-			)
+			checkErr(err)
 		}
 	}
 }
