@@ -4,6 +4,7 @@ package colour
 const (
 	Normal    = "\033[0;39m"
 	Invisible = "\033[8m"
+	Overwrite = "\033[2K\r"
 
 	Red   = "\033[31m"
 	Green = "\033[32m"
