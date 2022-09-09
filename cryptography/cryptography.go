@@ -9,6 +9,7 @@ import (
 	"io"
 	"os"
 	"regexp"
+	"sync"
 
 	"golang.org/x/crypto/scrypt"
 )
@@ -64,6 +65,23 @@ func EncryptFile(password, src string) {
 		checkErr(err)
 	}()
 
+	var wg sync.WaitGroup
+	defer wg.Wait()
+	chunksEncryptedChannel := make(chan int, 100)
+
+	fileInfo, err := file.Stat()
+	checkErr(err)
+	fileSize := int(fileInfo.Size())
+
+	wg.Add(1)
+	go printProgress(
+		&wg,
+		src,
+		'e',
+		fileSize,
+		chunksEncryptedChannel,
+	)
+
 	// make space for file hmac
 	_, err = destFile.Write(make([]byte, fileHmacSize))
 	checkErr(err)
@@ -104,7 +122,11 @@ func EncryptFile(password, src string) {
 
 		_, err = destFile.Write(encryptedBuffer)
 		checkErr(err)
+
+		chunksEncryptedChannel <- nRead
 	}
+
+	close(chunksEncryptedChannel)
 
 	computedHmac := hmacHash.Sum(nil)
 	destFile.Seek(0, 0)
@@ -162,6 +184,23 @@ func DecryptFile(password, src string) error {
 		dest = src + ".dec"
 	}
 
+	var wg sync.WaitGroup
+	defer wg.Wait()
+	chunksDecryptedChannel := make(chan int, 100)
+
+	fileInfo, err := file.Stat()
+	checkErr(err)
+	fileSize := int(fileInfo.Size())
+
+	wg.Add(1)
+	go printProgress(
+		&wg,
+		src,
+		'd',
+		fileSize,
+		chunksDecryptedChannel,
+	)
+
 	destFile, err := os.Create(dest)
 	checkErr(err)
 	defer func() {
@@ -197,7 +236,11 @@ func DecryptFile(password, src string) error {
 
 		_, err = destFile.Write(decryptedBuffer)
 		checkErr(err)
+
+		chunksDecryptedChannel <- nRead
 	}
+
+	close(chunksDecryptedChannel)
 
 	computedHmac := hmacHash.Sum(nil)
 	if fileAuthentic := hmac.Equal(storedHmac, computedHmac); !fileAuthentic {
