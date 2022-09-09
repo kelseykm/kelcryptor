@@ -17,8 +17,6 @@ func main() {
 	printBanner()
 
 	toRecordTimeTaken, toEncrypt, toDecrypt, files := parseFlags()
-	fmt.Printf("time: %v, enc: %v, dec: %v, files: %v\n",
-		toRecordTimeTaken, toEncrypt, toDecrypt, files)
 
 	verifyFiles(files)
 
