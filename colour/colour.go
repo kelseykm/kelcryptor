@@ -1,5 +1,7 @@
 package colour
 
+import "fmt"
+
 // Exported colours
 const (
 	Normal    = "\033[0;39m"
@@ -48,3 +50,46 @@ const (
 	BlueBlinking  = "\033[5;34m"
 	WhiteBlinking = "\033[5;39m"
 )
+
+func Info() string {
+	return fmt.Sprintf(
+		"%s%s[INFO]%s",
+		BlueBackground,
+		BlueBold,
+		Normal,
+	)
+}
+
+func Error() string {
+	return fmt.Sprintf(
+		"%s%s[ERROR]%s",
+		RedBackground,
+		RedBold,
+		Normal,
+	)
+}
+
+func Input() string {
+	return fmt.Sprintf(
+		"%s%s[INPUT]%s",
+		GreenBackground,
+		GreenBold,
+		Normal,
+	)
+}
+
+func Message(mesg string) string {
+	return fmt.Sprintf(
+		"%s%s%s",
+		WhiteBold,
+		Normal,
+	)
+}
+
+func FileName(file string) string {
+	return fmt.Sprintf(
+		"%s%s%s",
+		WhiteUnderlined,
+		Normal,
+	)
+}
