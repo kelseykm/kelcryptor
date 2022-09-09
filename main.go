@@ -16,7 +16,7 @@ func checkErr(err error) {
 func main() {
 	printBanner()
 
-	toRecordTimeTaken, toEncrypt, toDecrypt, files := parseFlags()
+	_, toEncrypt, toDecrypt, files := parseFlags()
 
 	verifyFiles(files)
 
