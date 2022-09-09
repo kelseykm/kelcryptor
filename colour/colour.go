@@ -82,6 +82,7 @@ func Message(mesg string) string {
 	return fmt.Sprintf(
 		"%s%s%s",
 		WhiteBold,
+		mesg,
 		Normal,
 	)
 }
@@ -90,6 +91,7 @@ func FileName(file string) string {
 	return fmt.Sprintf(
 		"%s%s%s",
 		WhiteUnderlined,
+		file,
 		Normal,
 	)
 }
