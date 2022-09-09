@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"os"
 
@@ -9,14 +8,14 @@ import (
 )
 
 func verifyFiles(files []string) {
-	var nonExistentFiles, nonRegularNonDirFiles []string
+	var nonExistentFiles, nonRegularFiles []string
 
 	for _, file := range files {
 		fileInfo, err := os.Stat(file)
 		if err != nil {
 			nonExistentFiles = append(nonExistentFiles, file)
-		} else if !fileInfo.Mode().IsRegular() && !fileInfo.Mode().IsDir() {
-			nonRegularNonDirFiles = append(nonRegularNonDirFiles, file)
+		} else if !fileInfo.Mode().IsRegular() {
+			nonRegularFiles = append(nonRegularFiles, file)
 		}
 	}
 
@@ -38,30 +37,26 @@ func verifyFiles(files []string) {
 				fmt.Println()
 			}
 		}
-
-		flag.Usage()
 		os.Exit(2)
 
-	} else if len(nonRegularNonDirFiles) != 0 {
+	} else if len(nonRegularFiles) != 0 {
 		fmt.Printf(
 			"%s %s",
 			colour.Error(),
 			colour.Message("Some files are not regular files:\n"),
 		)
 
-		for index, file := range nonRegularNonDirFiles {
+		for index, file := range nonRegularFiles {
 			fmt.Printf(
 				"  %v: %s\n",
 				index+1,
 				colour.FileName(file),
 			)
 
-			if index+1 == len(nonRegularNonDirFiles) {
+			if index+1 == len(nonRegularFiles) {
 				fmt.Println()
 			}
 		}
-
-		flag.Usage()
 		os.Exit(2)
 	}
 }
