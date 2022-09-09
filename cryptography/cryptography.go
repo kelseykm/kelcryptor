@@ -71,7 +71,7 @@ func EncryptFile(password, src string) {
 
 	fileInfo, err := file.Stat()
 	checkErr(err)
-	fileSize := int(fileInfo.Size())
+	fileSize := fileInfo.Size()
 
 	wg.Add(1)
 	go printProgress(
@@ -190,7 +190,7 @@ func DecryptFile(password, src string) error {
 
 	fileInfo, err := file.Stat()
 	checkErr(err)
-	fileSize := int(fileInfo.Size())
+	fileSize := fileInfo.Size()
 
 	wg.Add(1)
 	go printProgress(

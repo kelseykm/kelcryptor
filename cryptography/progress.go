@@ -7,7 +7,7 @@ import (
 	"github.com/kelseykm/kelcryptor/colour"
 )
 
-func printProgress(wg *sync.WaitGroup, fileName string, operation byte, totalSize int, ch <-chan int) {
+func printProgress(wg *sync.WaitGroup, fileName string, operation byte, totalSize int64, ch <-chan int) {
 	var operationVerb string
 
 	switch operation {
