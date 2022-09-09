@@ -7,6 +7,12 @@ import (
 	"github.com/kelseykm/kelcryptor/cryptography"
 )
 
+func checkErr(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
 func main() {
 	PrintBanner()
 
@@ -17,9 +23,7 @@ func main() {
 	VerifyFiles(files)
 
 	password, err := ScanPassword()
-	if err != nil {
-		panic(err)
-	}
+	checkErr(err)
 
 	switch {
 	case toEncrypt:
