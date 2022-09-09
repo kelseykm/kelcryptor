@@ -11,7 +11,10 @@ import (
 type mismatchedPassword struct{}
 
 func (m mismatchedPassword) Error() string {
-	return "Passwords do not match"
+	return fmt.Sprintf("%s %s",
+		colour.Error(),
+		colour.Message("Passwords do not match"),
+	)
 }
 
 func scanPassword() (string, error) {
