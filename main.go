@@ -14,15 +14,15 @@ func checkErr(err error) {
 }
 
 func main() {
-	PrintBanner()
+	printBanner()
 
-	toRecordTimeTaken, toEncrypt, toDecrypt, files := ParseFlags()
+	toRecordTimeTaken, toEncrypt, toDecrypt, files := parseFlags()
 	fmt.Printf("time: %v, enc: %v, dec: %v, files: %v\n",
 		toRecordTimeTaken, toEncrypt, toDecrypt, files)
 
-	VerifyFiles(files)
+	verifyFiles(files)
 
-	password, err := ScanPassword()
+	password, err := scanPassword()
 	checkErr(err)
 
 	switch {

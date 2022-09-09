@@ -14,8 +14,7 @@ func (m mismatchedPassword) Error() string {
 	return "Passwords do not match"
 }
 
-// ScanPassword scans password from stdin
-func ScanPassword() (string, error) {
+func scanPassword() (string, error) {
 	reader := bufio.NewReader(os.Stdin)
 
 	fmt.Printf("%vEnter password: %s", colour.GreenBold, colour.Normal)

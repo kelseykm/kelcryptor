@@ -8,8 +8,7 @@ import (
 	"github.com/kelseykm/kelcryptor/colour"
 )
 
-// VerifyFiles ensures that files passed are either regular files or directories
-func VerifyFiles(files []string) {
+func verifyFiles(files []string) {
 	var nonExistentFiles, nonRegularNonDirFiles []string
 
 	for _, file := range files {

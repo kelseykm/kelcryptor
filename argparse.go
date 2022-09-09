@@ -12,8 +12,7 @@ var timeTakenFlag bool
 var encryptFlag bool
 var decryptFlag bool
 
-// ParseFlags parses flags and arguments and  returns them
-func ParseFlags() (timeTaken, encrypt, decrypt bool, files []string) {
+func parseFlags() (timeTaken, encrypt, decrypt bool, files []string) {
 	flag.Parse()
 
 	timeTaken = timeTakenFlag
