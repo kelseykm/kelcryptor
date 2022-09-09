@@ -24,36 +24,27 @@ func parseFlags() (timeTaken, encrypt, decrypt bool, files []string) {
 
 	if len(files) == 0 {
 		errorString = fmt.Sprintf(
-			"%s%s[ERROR]%s %sfile(s) to be decrypted/encrypted not provided%s\n\n",
-			colour.RedBackground,
-			colour.RedBold,
-			colour.Normal,
-			colour.WhiteBold,
-			colour.Normal,
+			"%s %s",
+			colour.Error(),
+			colour.Message("file(s) to be decrypted/encrypted not provided\n\n"),
 		)
 		fmt.Fprintf(flag.CommandLine.Output(), errorString)
 		flag.Usage()
 		os.Exit(2)
 	} else if encryptFlag && decryptFlag {
 		errorString = fmt.Sprintf(
-			"%s%s[ERROR]%s %scannot set both -decrypt and -encrypt%s\n\n",
-			colour.RedBackground,
-			colour.RedBold,
-			colour.Normal,
-			colour.WhiteBold,
-			colour.Normal,
+			"%s %s",
+			colour.Error(),
+			colour.Message("cannot set both -decrypt and -encrypt\n\n"),
 		)
 		fmt.Fprintf(flag.CommandLine.Output(), errorString)
 		flag.Usage()
 		os.Exit(2)
 	} else if !encryptFlag && !decryptFlag {
 		errorString = fmt.Sprintf(
-			"%s%s[ERROR]%s %seither -decrypt or -encrypt must be set%s\n\n",
-			colour.RedBackground,
-			colour.RedBold,
-			colour.Normal,
-			colour.WhiteBold,
-			colour.Normal,
+			"%s %s",
+			colour.Error(),
+			colour.Message("either -decrypt or -encrypt must be set\n\n"),
 		)
 		fmt.Fprintf(flag.CommandLine.Output(), errorString)
 		flag.Usage()
@@ -64,7 +55,10 @@ func parseFlags() (timeTaken, encrypt, decrypt bool, files []string) {
 
 func init() {
 	flag.Usage = func() {
-		fmt.Fprintf(flag.CommandLine.Output(), "usage: kelcryptor [-h|-help] [[-e|-encrypt]|[-d|-decrypt]] [-t|-time] FILE [FILE ...]\n\n")
+		fmt.Fprintf(
+			flag.CommandLine.Output(),
+			"usage: kelcryptor [-h|-help] [[-e|-encrypt]|[-d|-decrypt]] [-t|-time] FILE [FILE ...]\n\n",
+		)
 		flag.PrintDefaults()
 	}
 
