@@ -7,8 +7,21 @@ import (
 	"github.com/kelseykm/kelcryptor/colour"
 )
 
-func verifyFiles(files []string) {
+type badFiles struct {
+	message string
+}
+
+func (b *badFiles) addToMesg(more string) {
+	b.message += more
+}
+
+func (b *badFiles) Error() string {
+	return b.message
+}
+
+func verifyFiles(files []string) error {
 	var nonExistentFiles, nonRegularFiles []string
+	var badFilesErr *badFiles
 
 	for _, file := range files {
 		fileInfo, err := os.Stat(file)
@@ -20,43 +33,50 @@ func verifyFiles(files []string) {
 	}
 
 	if len(nonExistentFiles) != 0 {
-		fmt.Printf(
-			"%s %s",
-			colour.Error(),
-			colour.Message("Some files do not exist:\n"),
-		)
+		badFilesErr = &badFiles{}
+
+		badFilesErr.addToMesg(
+			fmt.Sprintf(
+				"%s %s",
+				colour.Error(),
+				colour.Message("Some files do not exist:\n"),
+			))
 
 		for index, file := range nonExistentFiles {
-			fmt.Printf(
-				"  %v: %s\n",
-				index+1,
-				colour.FileName(file),
-			)
-
-			if index+1 == len(nonExistentFiles) {
-				fmt.Println()
-			}
+			badFilesErr.addToMesg(
+				fmt.Sprintf(
+					"  %v: %s\n",
+					index+1,
+					colour.FileName(file),
+				))
 		}
-		os.Exit(2)
 
-	} else if len(nonRegularFiles) != 0 {
-		fmt.Printf(
-			"%s %s",
-			colour.Error(),
-			colour.Message("Some files are not regular files:\n"),
-		)
+	}
+
+	if len(nonRegularFiles) != 0 {
+		if badFilesErr == nil {
+			badFilesErr = &badFiles{}
+		}
+
+		badFilesErr.addToMesg(
+			fmt.Sprintf(
+				"%s %s",
+				colour.Error(),
+				colour.Message("Some files are not regular files:\n"),
+			))
 
 		for index, file := range nonRegularFiles {
-			fmt.Printf(
-				"  %v: %s\n",
-				index+1,
-				colour.FileName(file),
-			)
-
-			if index+1 == len(nonRegularFiles) {
-				fmt.Println()
-			}
+			badFilesErr.addToMesg(
+				fmt.Sprintf(
+					"  %v: %s\n",
+					index+1,
+					colour.FileName(file),
+				))
 		}
-		os.Exit(2)
 	}
+
+	if badFilesErr == nil {
+		return nil
+	}
+	return badFilesErr
 }
