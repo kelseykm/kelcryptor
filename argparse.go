@@ -24,7 +24,8 @@ func parseFlags() (timeTaken, encrypt, decrypt bool, files []string) {
 
 	if len(files) == 0 {
 		errorString = fmt.Sprintf(
-			"%serror:%s %sfile(s) to be decrypted/encrypted not provided%s\n\n",
+			"%s%s[ERROR]%s %sfile(s) to be decrypted/encrypted not provided%s\n\n",
+			colour.RedBackground,
 			colour.RedBold,
 			colour.Normal,
 			colour.WhiteBold,
@@ -35,7 +36,8 @@ func parseFlags() (timeTaken, encrypt, decrypt bool, files []string) {
 		os.Exit(2)
 	} else if encryptFlag && decryptFlag {
 		errorString = fmt.Sprintf(
-			"%serror:%s %scannot set both -decrypt and -encrypt%s\n\n",
+			"%s%s[ERROR]%s %scannot set both -decrypt and -encrypt%s\n\n",
+			colour.RedBackground,
 			colour.RedBold,
 			colour.Normal,
 			colour.WhiteBold,
@@ -46,7 +48,8 @@ func parseFlags() (timeTaken, encrypt, decrypt bool, files []string) {
 		os.Exit(2)
 	} else if !encryptFlag && !decryptFlag {
 		errorString = fmt.Sprintf(
-			"%serror:%s %seither -decrypt or -encrypt must be set%s\n\n",
+			"%s%s[ERROR]%s %seither -decrypt or -encrypt must be set%s\n\n",
+			colour.RedBackground,
 			colour.RedBold,
 			colour.Normal,
 			colour.WhiteBold,

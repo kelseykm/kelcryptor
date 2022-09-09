@@ -29,8 +29,15 @@ func main() {
 	case toEncrypt:
 		for _, file := range files {
 			cryptography.EncryptFile(password, file)
-			fmt.Printf("%s[INFO]%s%s %s%s encrypted\n",
-				colour.BlueBackground, colour.Normal, colour.WhiteBold, file, colour.Normal,
+			fmt.Printf("%s%s[INFO]%s %s%s%s %sencrypted%s\n",
+				colour.BlueBackground,
+				colour.BlueBold,
+				colour.Normal,
+				colour.WhiteUnderlined,
+				file,
+				colour.Normal,
+				colour.WhiteBold,
+				colour.Normal,
 			)
 		}
 	case toDecrypt:
@@ -39,8 +46,15 @@ func main() {
 			if err != nil {
 				panic(err)
 			}
-			fmt.Printf("%s[INFO]%s%s %s%s decrypted\n",
-				colour.BlueBackground, colour.Normal, colour.WhiteBold, file, colour.Normal,
+			fmt.Printf("%s%s[INFO]%s %s%s%s decrypted\n",
+				colour.BlueBackground,
+				colour.BlueBold,
+				colour.Normal,
+				colour.WhiteUnderlined,
+				file,
+				colour.Normal,
+				colour.WhiteBold,
+				colour.Normal,
 			)
 		}
 	}

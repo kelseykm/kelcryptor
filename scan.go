@@ -17,16 +17,28 @@ func (m mismatchedPassword) Error() string {
 func scanPassword() (string, error) {
 	reader := bufio.NewReader(os.Stdin)
 
-	fmt.Printf("%vEnter password: %s", colour.GreenBold, colour.Normal)
-	fmt.Printf("%v", colour.Invisible)
+	fmt.Printf("%s%s[INPUT]%s %sEnter password: %s",
+		colour.GreenBackground,
+		colour.GreenBold,
+		colour.Normal,
+		colour.GreenBold,
+		colour.Normal,
+	)
+	fmt.Printf("%s", colour.Invisible)
 	password, err := reader.ReadString('\n')
-	fmt.Printf("%v", colour.Normal)
+	fmt.Printf("%s", colour.Normal)
 	checkErr(err)
 
-	fmt.Printf("%vRepeat password: %s", colour.GreenBold, colour.Normal)
-	fmt.Printf("%v", colour.Invisible)
+	fmt.Printf("%s%s[INPUT]%s %sRepeat password: %s",
+		colour.GreenBackground,
+		colour.GreenBold,
+		colour.Normal,
+		colour.GreenBold,
+		colour.Normal,
+	)
+	fmt.Printf("%s", colour.Invisible)
 	passwordConfirm, err := reader.ReadString('\n')
-	fmt.Printf("%v", colour.Normal)
+	fmt.Printf("%s", colour.Normal)
 	checkErr(err)
 
 	if password != passwordConfirm {
