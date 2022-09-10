@@ -6,11 +6,13 @@ import (
 	"crypto/hmac"
 	"crypto/rand"
 	"crypto/sha256"
+	"fmt"
 	"io"
 	"os"
 	"regexp"
 	"sync"
 
+	"github.com/kelseykm/kelcryptor/colour"
 	"golang.org/x/crypto/scrypt"
 )
 
@@ -137,13 +139,19 @@ func EncryptFile(password, src string) {
 type wrongPassword struct{}
 
 func (w wrongPassword) Error() string {
-	return "Incorrect password"
+	return fmt.Sprintf("%s %s",
+		colour.Error(),
+		colour.Message("Incorrect password"),
+	)
 }
 
 type fileModified struct{}
 
 func (f fileModified) Error() string {
-	return "File integrity compromised"
+	return fmt.Sprintf("%s %s",
+		colour.Error(),
+		colour.Message("File interity compromised"),
+	)
 }
 
 // DecryptFile decrypts the src with a key derived from
