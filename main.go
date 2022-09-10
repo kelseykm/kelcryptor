@@ -2,27 +2,38 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/kelseykm/kelcryptor/colour"
 	"github.com/kelseykm/kelcryptor/cryptography"
 )
 
-func checkErr(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
-
 func main() {
+	retVal := 0
+	defer func() {
+		os.Exit(retVal)
+	}()
+
 	printBanner()
 
 	toRecordTime, toEncrypt, toDecrypt, files := parseFlags()
 
-	verifyFiles(files)
+	if err := verifyFiles(files); err != nil {
+		fmt.Println(err.Error())
+		retVal = 2
+		return
+	}
 
-	password, err := scanPassword()
-	checkErr(err)
+	password := func() string {
+		for {
+			password, err := scanPassword()
+			if err == nil {
+				return password
+			}
+			fmt.Println(err.Error())
+		}
+	}()
 
 	switch {
 	case toEncrypt:
@@ -49,13 +60,19 @@ func main() {
 	case toDecrypt:
 		for _, file := range files {
 			if !toRecordTime {
-				err := cryptography.DecryptFile(password, file)
-				checkErr(err)
+				if err := cryptography.DecryptFile(password, file); err != nil {
+					fmt.Println(err.Error())
+					retVal = 2
+					return
+				}
 			} else {
 				start := time.Now()
 
-				err := cryptography.DecryptFile(password, file)
-				checkErr(err)
+				if err := cryptography.DecryptFile(password, file); err != nil {
+					fmt.Println(err.Error())
+					retVal = 2
+					return
+				}
 
 				timeTaken := time.Since(start).Seconds()
 
