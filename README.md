@@ -17,4 +17,4 @@ A commandline file encryption and decryption application, written in [Go](https:
 
 ## Installation
 
-Run `go build` and add the resulting binary to your PATH
+Run `make` in the project root and add the resulting `kelcryptor` binary to your `$PATH`
