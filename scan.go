@@ -18,6 +18,11 @@ func (m mismatchedPassword) Error() string {
 }
 
 func scanPassword() (string, error) {
+	checkErr := func(err error) {
+		if err != nil {
+			panic(err)
+		}
+	}
 	reader := bufio.NewReader(os.Stdin)
 
 	fmt.Printf("%s %s",
