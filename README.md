@@ -13,6 +13,7 @@ A commandline file encryption and decryption application, written in [Go](https:
 - Pass multiple files at once
 - Ignore and skip files with errors when encrypting many files
 - Keeps track of time taken to encrypt/decrypt file(s)
+- Shows progress of encryption/decryption
 
 ## Installation
 
