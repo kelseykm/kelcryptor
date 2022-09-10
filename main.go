@@ -72,13 +72,12 @@ func main() {
 
 				timeTaken := time.Since(start).Seconds()
 
-				mesg := fmt.Sprintf("Done in %.2f seconds",
-					timeTaken,
-				)
-
-				fmt.Printf("%s %s\n",
+				fmt.Printf("%s %s %s %s %s\n",
 					colour.Info(),
-					colour.Message(mesg),
+					colour.Message("Done in"),
+					colour.Time(timeTaken),
+					colour.Message("seconds:"),
+					colour.FileName(file),
 				)
 			}
 		}
@@ -107,13 +106,12 @@ func main() {
 
 				timeTaken := time.Since(start).Seconds()
 
-				mesg := fmt.Sprintf("Done in %.2f seconds",
-					timeTaken,
-				)
-
-				fmt.Printf("%s %s\n",
+				fmt.Printf("%s %s %s %s %s\n",
 					colour.Info(),
-					colour.Message(mesg),
+					colour.Message("Done in"),
+					colour.Time(timeTaken),
+					colour.Message("seconds:"),
+					colour.FileName(file),
 				)
 			}
 		}
