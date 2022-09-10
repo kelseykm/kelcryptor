@@ -25,15 +25,23 @@ func main() {
 		return
 	}
 
-	password := func() string {
+	password, err := func() (string, error) {
+		var acceptableError mismatchedPassword
 		for {
 			password, err := scanPassword()
 			if err == nil {
-				return password
+				return password, nil
+			} else if err != acceptableError {
+				return "", err
 			}
 			fmt.Println(err.Error())
 		}
 	}()
+	if err != nil {
+		fmt.Println(err.Error())
+		retVal = 2
+		return
+	}
 
 	switch {
 	case toEncrypt:
