@@ -24,9 +24,8 @@ func main() {
 		retVal = 2
 		if !toIgnore {
 			return
-		} else {
-			files = cleanFiles
 		}
+		files = cleanFiles
 	}
 
 	password, err := func() (string, error) {
