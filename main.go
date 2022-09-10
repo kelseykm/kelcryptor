@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	retVal := 0
+	var retVal int
 	defer func() {
 		os.Exit(retVal)
 	}()
