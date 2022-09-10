@@ -17,12 +17,16 @@ func (m mismatchedPassword) Error() string {
 	)
 }
 
+type genericError struct{ message string }
+
+func (g genericError) Error() string {
+	return fmt.Sprintf("%s %s",
+		colour.Error(),
+		colour.Message(g.message),
+	)
+}
+
 func scanPassword() (string, error) {
-	checkErr := func(err error) {
-		if err != nil {
-			panic(err)
-		}
-	}
 	reader := bufio.NewReader(os.Stdin)
 
 	fmt.Printf("%s %s",
@@ -32,7 +36,10 @@ func scanPassword() (string, error) {
 	fmt.Printf("%s", colour.Invisible)
 	password, err := reader.ReadString('\n')
 	fmt.Printf("%s", colour.Normal)
-	checkErr(err)
+	if err != nil {
+		fmt.Println()
+		return "", genericError{err.Error()}
+	}
 
 	fmt.Printf("%s %s",
 		colour.Input(),
@@ -41,7 +48,10 @@ func scanPassword() (string, error) {
 	fmt.Printf("%s", colour.Invisible)
 	passwordConfirm, err := reader.ReadString('\n')
 	fmt.Printf("%s", colour.Normal)
-	checkErr(err)
+	if err != nil {
+		fmt.Println()
+		return "", genericError{err.Error()}
+	}
 
 	if password != passwordConfirm {
 		return "", mismatchedPassword{}
