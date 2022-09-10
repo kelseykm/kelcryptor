@@ -17,12 +17,16 @@ func main() {
 
 	printBanner()
 
-	toRecordTime, toEncrypt, toDecrypt, files := parseFlags()
+	toIgnore, toRecordTime, toEncrypt, toDecrypt, files := parseFlags()
 
-	if err := verifyFiles(files); err != nil {
+	if cleanFiles, err := verifyFiles(files); err != nil {
 		fmt.Println(err.Error())
 		retVal = 2
-		return
+		if !toIgnore {
+			return
+		} else {
+			files = cleanFiles
+		}
 	}
 
 	password, err := func() (string, error) {
@@ -50,6 +54,9 @@ func main() {
 				if err := cryptography.EncryptFile(password, file); err != nil {
 					fmt.Println(err.Error())
 					retVal = 2
+					if toIgnore {
+						continue
+					}
 					return
 				}
 			} else {
@@ -58,6 +65,9 @@ func main() {
 				if err := cryptography.EncryptFile(password, file); err != nil {
 					fmt.Println(err.Error())
 					retVal = 2
+					if toIgnore {
+						continue
+					}
 					return
 				}
 
@@ -79,6 +89,9 @@ func main() {
 				if err := cryptography.DecryptFile(password, file); err != nil {
 					fmt.Println(err.Error())
 					retVal = 2
+					if toIgnore {
+						continue
+					}
 					return
 				}
 			} else {
@@ -87,6 +100,9 @@ func main() {
 				if err := cryptography.DecryptFile(password, file); err != nil {
 					fmt.Println(err.Error())
 					retVal = 2
+					if toIgnore {
+						continue
+					}
 					return
 				}
 

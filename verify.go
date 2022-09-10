@@ -19,8 +19,8 @@ func (b *badFiles) Error() string {
 	return b.message
 }
 
-func verifyFiles(files []string) error {
-	var nonExistentFiles, nonRegularFiles []string
+func verifyFiles(files []string) ([]string, error) {
+	var cleanFiles, nonExistentFiles, nonRegularFiles []string
 	var badFilesErr *badFiles
 
 	for _, file := range files {
@@ -29,6 +29,8 @@ func verifyFiles(files []string) error {
 			nonExistentFiles = append(nonExistentFiles, file)
 		} else if !fileInfo.Mode().IsRegular() {
 			nonRegularFiles = append(nonRegularFiles, file)
+		} else {
+			cleanFiles = append(cleanFiles, file)
 		}
 	}
 
@@ -76,7 +78,8 @@ func verifyFiles(files []string) error {
 	}
 
 	if badFilesErr == nil {
-		return nil
+		return cleanFiles, nil
 	}
-	return badFilesErr
+
+	return cleanFiles, badFilesErr
 }
