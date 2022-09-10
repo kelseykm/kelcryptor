@@ -51,6 +51,7 @@ const (
 	WhiteBlinking = "\033[5;39m"
 )
 
+// Info returns a formatted info banner
 func Info() string {
 	return fmt.Sprintf(
 		"%s%s[INFO]%s",
@@ -60,6 +61,7 @@ func Info() string {
 	)
 }
 
+// Error returns a formatted error banner
 func Error() string {
 	return fmt.Sprintf(
 		"%s%s[ERROR]%s",
@@ -69,6 +71,7 @@ func Error() string {
 	)
 }
 
+// Input returns a formatted input banner
 func Input() string {
 	return fmt.Sprintf(
 		"%s%s[INPUT]%s",
@@ -78,6 +81,7 @@ func Input() string {
 	)
 }
 
+// Message formats the mesg string
 func Message(mesg string) string {
 	return fmt.Sprintf(
 		"%s%s%s",
@@ -87,6 +91,7 @@ func Message(mesg string) string {
 	)
 }
 
+// FileName formats the file string
 func FileName(file string) string {
 	return fmt.Sprintf(
 		"%s%s%s",
