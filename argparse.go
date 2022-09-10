@@ -11,13 +11,15 @@ import (
 var timeTakenFlag bool
 var encryptFlag bool
 var decryptFlag bool
+var ignoreFlag bool
 
-func parseFlags() (timeTaken, encrypt, decrypt bool, files []string) {
+func parseFlags() (ignore, timeTaken, encrypt, decrypt bool, files []string) {
 	flag.Parse()
 
 	timeTaken = timeTakenFlag
 	encrypt = encryptFlag
 	decrypt = decryptFlag
+	ignore = ignoreFlag
 	files = flag.Args()
 
 	var errorString string
@@ -57,15 +59,20 @@ func init() {
 	flag.Usage = func() {
 		fmt.Fprintf(
 			flag.CommandLine.Output(),
-			"usage: kelcryptor [-h|-help] [[-e|-encrypt]|[-d|-decrypt]] [-t|-time] FILE [FILE ...]\n\n",
+			"usage: kelcryptor [-h|-help] [-i|-ignore] [[-e|-encrypt]|[-d|-decrypt]] [-t|-time] FILE [FILE ...]\n\n",
 		)
 		flag.PrintDefaults()
 	}
 
 	flag.BoolVar(&timeTakenFlag, "time", false, "show time taken to encrypt/decrypt file(s)")
 	flag.BoolVar(&timeTakenFlag, "t", false, "show time taken to encrypt/decrypt file(s) (short option)")
+
 	flag.BoolVar(&encryptFlag, "encrypt", false, "encrypt file(s)")
 	flag.BoolVar(&encryptFlag, "e", false, "encrypt file(s) (short option)")
+
 	flag.BoolVar(&decryptFlag, "decrypt", false, "decrypt file(s)")
 	flag.BoolVar(&decryptFlag, "d", false, "decrypt file(s) (short option)")
+
+	flag.BoolVar(&ignoreFlag, "ignore", false, "skip file(s) with errors when encrypting/decrypting")
+	flag.BoolVar(&ignoreFlag, "i", false, "skip file(s) with errors when encrypting/decrypting (short option)")
 }
