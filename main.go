@@ -39,11 +39,19 @@ func main() {
 	case toEncrypt:
 		for _, file := range files {
 			if !toRecordTime {
-				cryptography.EncryptFile(password, file)
+				if err := cryptography.EncryptFile(password, file); err != nil {
+					fmt.Println(err.Error())
+					retVal = 2
+					return
+				}
 			} else {
 				start := time.Now()
 
-				cryptography.EncryptFile(password, file)
+				if err := cryptography.EncryptFile(password, file); err != nil {
+					fmt.Println(err.Error())
+					retVal = 2
+					return
+				}
 
 				timeTaken := time.Since(start).Seconds()
 
