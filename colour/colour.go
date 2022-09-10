@@ -100,3 +100,14 @@ func FileName(file string) string {
 		Normal,
 	)
 }
+
+// Time returns the time in a formatted string
+func Time(time float64) string {
+	return fmt.Sprintf(
+		"%s%s%.2f%s",
+		BrownBackground,
+		BrownBold,
+		time,
+		Normal,
+	)
+}
