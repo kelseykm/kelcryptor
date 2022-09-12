@@ -9,6 +9,8 @@ import (
 	"github.com/kelseykm/kelcryptor/cryptography"
 )
 
+const version = "1.0.0"
+
 func main() {
 	var retVal int
 	defer func() {
