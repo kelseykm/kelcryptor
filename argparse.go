@@ -12,9 +12,20 @@ var timeTakenFlag bool
 var encryptFlag bool
 var decryptFlag bool
 var ignoreFlag bool
+var versionFlag bool
 
 func parseFlags() (ignore, timeTaken, encrypt, decrypt bool, files []string) {
 	flag.Parse()
+
+	if versionFlag {
+		fmt.Fprintf(
+			flag.CommandLine.Output(),
+			"%s %s\n",
+			colour.Info(),
+			colour.Message("v"+version),
+		)
+		os.Exit(0)
+	}
 
 	timeTaken = timeTakenFlag
 	encrypt = encryptFlag
@@ -59,10 +70,13 @@ func init() {
 	flag.Usage = func() {
 		fmt.Fprintf(
 			flag.CommandLine.Output(),
-			"usage: kelcryptor [-h|-help] [-i|-ignore] [[-e|-encrypt]|[-d|-decrypt]] [-t|-time] FILE [FILE ...]\n\n",
+			"usage: kelcryptor [-h|-help] [-v|-version] [-i|-ignore] [[-e|-encrypt]|[-d|-decrypt]] [-t|-time] FILE [FILE ...]\n\n",
 		)
 		flag.PrintDefaults()
 	}
+
+	flag.BoolVar(&versionFlag, "version", false, "show version and exit")
+	flag.BoolVar(&versionFlag, "v", false, "show version and exit (short option)")
 
 	flag.BoolVar(&timeTakenFlag, "time", false, "show time taken to encrypt/decrypt file(s)")
 	flag.BoolVar(&timeTakenFlag, "t", false, "show time taken to encrypt/decrypt file(s) (short option)")
