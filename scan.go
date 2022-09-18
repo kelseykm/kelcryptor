@@ -6,25 +6,8 @@ import (
 	"os"
 
 	"github.com/kelseykm/kelcryptor/colour"
+	"github.com/kelseykm/kelcryptor/errors"
 )
-
-type mismatchedPassword struct{}
-
-func (m mismatchedPassword) Error() string {
-	return fmt.Sprintf("%s %s",
-		colour.Error(),
-		colour.Message("Passwords do not match"),
-	)
-}
-
-type genericError struct{ message string }
-
-func (g genericError) Error() string {
-	return fmt.Sprintf("%s %s",
-		colour.Error(),
-		colour.Message(g.message),
-	)
-}
 
 func scanPassword() (string, error) {
 	reader := bufio.NewReader(os.Stdin)
@@ -38,7 +21,7 @@ func scanPassword() (string, error) {
 	fmt.Printf("%s", colour.Normal)
 	if err != nil {
 		fmt.Println()
-		return "", genericError{err.Error()}
+		return "", errors.GenericError{err.Error()}
 	}
 
 	fmt.Printf("%s %s",
@@ -50,11 +33,11 @@ func scanPassword() (string, error) {
 	fmt.Printf("%s", colour.Normal)
 	if err != nil {
 		fmt.Println()
-		return "", genericError{err.Error()}
+		return "", errors.GenericError{err.Error()}
 	}
 
 	if password != passwordConfirm {
-		return "", mismatchedPassword{}
+		return "", errors.MismatchedPassword{}
 	}
 
 	return password, nil

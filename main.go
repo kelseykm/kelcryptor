@@ -7,6 +7,7 @@ import (
 
 	"github.com/kelseykm/kelcryptor/colour"
 	"github.com/kelseykm/kelcryptor/cryptography"
+	"github.com/kelseykm/kelcryptor/errors"
 )
 
 const version = "1.1.0"
@@ -31,7 +32,7 @@ func main() {
 	}
 
 	password, err := func() (string, error) {
-		var acceptableError mismatchedPassword
+		var acceptableError errors.MismatchedPassword
 		for {
 			password, err := scanPassword()
 			if err == nil {

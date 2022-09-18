@@ -5,23 +5,12 @@ import (
 	"os"
 
 	"github.com/kelseykm/kelcryptor/colour"
+	"github.com/kelseykm/kelcryptor/errors"
 )
-
-type badFiles struct {
-	message string
-}
-
-func (b *badFiles) addToMesg(more string) {
-	b.message += more
-}
-
-func (b *badFiles) Error() string {
-	return b.message
-}
 
 func verifyFiles(files []string) ([]string, error) {
 	var cleanFiles, nonExistentFiles, nonRegularFiles []string
-	var badFilesErr *badFiles
+	var badFilesErr *errors.BadFiles
 
 	for _, file := range files {
 		fileInfo, err := os.Stat(file)
@@ -35,9 +24,9 @@ func verifyFiles(files []string) ([]string, error) {
 	}
 
 	if len(nonExistentFiles) != 0 {
-		badFilesErr = &badFiles{}
+		badFilesErr = &errors.BadFiles{}
 
-		badFilesErr.addToMesg(
+		badFilesErr.AddToMesg(
 			fmt.Sprintf(
 				"%s %s",
 				colour.Error(),
@@ -45,7 +34,7 @@ func verifyFiles(files []string) ([]string, error) {
 			))
 
 		for index, file := range nonExistentFiles {
-			badFilesErr.addToMesg(
+			badFilesErr.AddToMesg(
 				fmt.Sprintf(
 					"  %v: %s\n",
 					index+1,
@@ -57,10 +46,10 @@ func verifyFiles(files []string) ([]string, error) {
 
 	if len(nonRegularFiles) != 0 {
 		if badFilesErr == nil {
-			badFilesErr = &badFiles{}
+			badFilesErr = &errors.BadFiles{}
 		}
 
-		badFilesErr.addToMesg(
+		badFilesErr.AddToMesg(
 			fmt.Sprintf(
 				"%s %s",
 				colour.Error(),
@@ -68,7 +57,7 @@ func verifyFiles(files []string) ([]string, error) {
 			))
 
 		for index, file := range nonRegularFiles {
-			badFilesErr.addToMesg(
+			badFilesErr.AddToMesg(
 				fmt.Sprintf(
 					"  %v: %s\n",
 					index+1,
