@@ -37,7 +37,7 @@ func scanPassword() (string, error) {
 	}
 
 	if password != passwordConfirm {
-		return "", errors.MismatchedPassword{}
+		return "", errors.MismatchedPasswordError{}
 	}
 
 	return password, nil

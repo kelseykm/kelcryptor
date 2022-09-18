@@ -191,7 +191,7 @@ func DecryptFile(password, src string) error {
 	}
 
 	if eq := hmac.Equal(compPasswordHash, passwordHash); !eq {
-		return errors.WrongPassword{}
+		return errors.WrongPasswordError{}
 	}
 
 	salt := make([]byte, saltSize)
@@ -262,7 +262,7 @@ func DecryptFile(password, src string) error {
 
 		decryptedBuffer, err := aead.Open(nil, nonce, buffer[nonceSize:nRead], nil)
 		if err != nil {
-			return errors.FileModified{}
+			return errors.FileModifiedError{}
 		}
 
 		hmacHash.Write(decryptedBuffer)
@@ -279,7 +279,7 @@ func DecryptFile(password, src string) error {
 
 	computedHmac := hmacHash.Sum(nil)
 	if fileAuthentic := hmac.Equal(storedHmac, computedHmac); !fileAuthentic {
-		return errors.FileModified{}
+		return errors.FileModifiedError{}
 	}
 
 	return nil

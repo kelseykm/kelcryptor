@@ -6,10 +6,10 @@ import (
 	"github.com/kelseykm/kelcryptor/colour"
 )
 
-// MismatchedPassword error
-type MismatchedPassword struct{}
+// MismatchedPasswordError error
+type MismatchedPasswordError struct{}
 
-func (m MismatchedPassword) Error() string {
+func (m MismatchedPasswordError) Error() string {
 	return fmt.Sprintf("%s %s",
 		colour.Error(),
 		colour.Message("Passwords do not match"),
@@ -26,32 +26,32 @@ func (g GenericError) Error() string {
 	)
 }
 
-// BadFiles error
-type BadFiles struct{ Message string }
+// BadFilesError error
+type BadFilesError struct{ Message string }
 
 // AddToMesg takes a string and adds it to the error message
-func (b *BadFiles) AddToMesg(more string) {
+func (b *BadFilesError) AddToMesg(more string) {
 	b.Message += more
 }
 
-func (b *BadFiles) Error() string {
+func (b *BadFilesError) Error() string {
 	return b.Message
 }
 
-// WrongPassword error
-type WrongPassword struct{}
+// WrongPasswordError error
+type WrongPasswordError struct{}
 
-func (w WrongPassword) Error() string {
+func (w WrongPasswordError) Error() string {
 	return fmt.Sprintf("%s %s",
 		colour.Error(),
 		colour.Message("Incorrect password"),
 	)
 }
 
-// FileModified error
-type FileModified struct{}
+// FileModifiedError error
+type FileModifiedError struct{}
 
-func (f FileModified) Error() string {
+func (f FileModifiedError) Error() string {
 	return fmt.Sprintf("%s %s",
 		colour.Error(),
 		colour.Message("File interity compromised"),

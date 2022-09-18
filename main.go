@@ -32,7 +32,7 @@ func main() {
 	}
 
 	password, err := func() (string, error) {
-		var acceptableError errors.MismatchedPassword
+		var acceptableError errors.MismatchedPasswordError
 		for {
 			password, err := scanPassword()
 			if err == nil {

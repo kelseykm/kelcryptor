@@ -10,7 +10,7 @@ import (
 
 func verifyFiles(files []string) ([]string, error) {
 	var cleanFiles, nonExistentFiles, nonRegularFiles []string
-	var badFilesErr *errors.BadFiles
+	var badFilesErr *errors.BadFilesError
 
 	for _, file := range files {
 		fileInfo, err := os.Stat(file)
@@ -24,7 +24,7 @@ func verifyFiles(files []string) ([]string, error) {
 	}
 
 	if len(nonExistentFiles) != 0 {
-		badFilesErr = &errors.BadFiles{}
+		badFilesErr = &errors.BadFilesError{}
 
 		badFilesErr.AddToMesg(
 			fmt.Sprintf(
@@ -46,7 +46,7 @@ func verifyFiles(files []string) ([]string, error) {
 
 	if len(nonRegularFiles) != 0 {
 		if badFilesErr == nil {
-			badFilesErr = &errors.BadFiles{}
+			badFilesErr = &errors.BadFilesError{}
 		}
 
 		badFilesErr.AddToMesg(
