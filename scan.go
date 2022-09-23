@@ -24,6 +24,9 @@ func scanPassword() (string, error) {
 		return "", errors.GenericError{err.Error()}
 	}
 
+	// remove the trailing newline
+	password = password[:len(password)-1]
+
 	fmt.Printf("%s %s",
 		colour.Input(),
 		colour.Message("Repeat password: "),
@@ -35,6 +38,9 @@ func scanPassword() (string, error) {
 		fmt.Println()
 		return "", errors.GenericError{err.Error()}
 	}
+
+	// remove the trailing newline
+	passwordConfirm = passwordConfirm[:len(passwordConfirm)-1]
 
 	if password != passwordConfirm {
 		return "", errors.MismatchedPasswordError{}
