@@ -10,7 +10,7 @@ import (
 	"github.com/kelseykm/kelcryptor/errors"
 )
 
-const version = "1.2.0"
+const version = "2.0.0"
 
 func main() {
 	var retVal int
