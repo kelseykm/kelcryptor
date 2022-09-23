@@ -4,51 +4,33 @@ import "fmt"
 
 // Exported colours
 const (
-	Normal    = "\033[0;39m"
-	Invisible = "\033[8m"
-	Overwrite = "\033[2K\r"
+	Normal        = "\033[0m"
+	Bold          = "\033[1m"
+	Italic        = "\033[3m"
+	Underline     = "\033[4m"
+	Blink         = "\033[5m"
+	Invert        = "\033[7m"
+	Invisible     = "\033[8m"
+	StrikeThrough = "\033[9m"
+	Overwrite     = "\033[2K" + "\r"
 
-	Red   = "\033[31m"
-	Green = "\033[32m"
-	Brown = "\033[33m"
-	Blue  = "\033[34m"
-	White = "\033[39m"
+	Black   = "\033[30m"
+	Red     = "\033[31m"
+	Green   = "\033[32m"
+	Yellow  = "\033[33m"
+	Blue    = "\033[34m"
+	Magenta = "\033[35m"
+	Cyan    = "\033[36m"
+	White   = "\033[37m"
 
-	RedBold   = "\033[1;31m"
-	GreenBold = "\033[1;32m"
-	BrownBold = "\033[1;33m"
-	BlueBold  = "\033[1;34m"
-	WhiteBold = "\033[1;39m"
-
-	RedUnderlined   = "\033[4;31m"
-	GreenUnderlined = "\033[4;32m"
-	BrownUnderlined = "\033[4;33m"
-	BlueUnderlined  = "\033[4;34m"
-	WhiteUnderlined = "\033[4;39m"
-
-	RedItalicised   = "\033[3;31m"
-	GreenItalicised = "\033[3;32m"
-	BrownItalicised = "\033[3;33m"
-	BlueItalicised  = "\033[3;34m"
-	WhiteItalicised = "\033[3;39m"
-
-	RedStrikeThrough   = "\033[9;31m"
-	GreenStrikeThrough = "\033[9;32m"
-	BrownStrikeThrough = "\033[9;33m"
-	BlueStrikeThrough  = "\033[9;34m"
-	WhiteStrikeThrough = "\033[9;39m"
-
-	RedBackground   = "\033[7;31m"
-	GreenBackground = "\033[7;32m"
-	BrownBackground = "\033[7;33m"
-	BlueBackground  = "\033[7;34m"
-	WhiteBackground = "\033[7;39m"
-
-	RedBlinking   = "\033[5;31m"
-	GreenBlinking = "\033[5;32m"
-	BrownBlinking = "\033[5;33m"
-	BlueBlinking  = "\033[5;34m"
-	WhiteBlinking = "\033[5;39m"
+	BlackBackground   = "\033[40m"
+	RedBackground     = "\033[41m"
+	GreenBackground   = "\033[42m"
+	YellowBackground  = "\033[43m"
+	BlueBackground    = "\033[44m"
+	MagentaBackground = "\033[45m"
+	CyanBackground    = "\033[46m"
+	WhiteBackground   = "\033[47m"
 )
 
 // Info returns a formatted info banner
@@ -56,7 +38,7 @@ func Info() string {
 	return fmt.Sprintf(
 		"%s%s[INFO]%s",
 		BlueBackground,
-		BlueBold,
+		Bold,
 		Normal,
 	)
 }
@@ -66,7 +48,7 @@ func Error() string {
 	return fmt.Sprintf(
 		"%s%s[ERROR]%s",
 		RedBackground,
-		RedBold,
+		Bold,
 		Normal,
 	)
 }
@@ -76,7 +58,7 @@ func Input() string {
 	return fmt.Sprintf(
 		"%s%s[INPUT]%s",
 		GreenBackground,
-		GreenBold,
+		Bold,
 		Normal,
 	)
 }
@@ -85,7 +67,7 @@ func Input() string {
 func Message(mesg string) string {
 	return fmt.Sprintf(
 		"%s%s%s",
-		WhiteBold,
+		Bold,
 		mesg,
 		Normal,
 	)
@@ -95,7 +77,7 @@ func Message(mesg string) string {
 func FileName(file string) string {
 	return fmt.Sprintf(
 		"%s%s%s",
-		WhiteUnderlined,
+		Underline,
 		file,
 		Normal,
 	)
@@ -105,8 +87,8 @@ func FileName(file string) string {
 func Time(time float64) string {
 	return fmt.Sprintf(
 		"%s%s%.2f%s",
-		BrownBackground,
-		BrownBold,
+		YellowBackground,
+		Bold,
 		time,
 		Normal,
 	)
