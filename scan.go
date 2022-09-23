@@ -1,49 +1,39 @@
 package main
 
 import (
-	"bufio"
+	"bytes"
 	"fmt"
-	"os"
+	"syscall"
 
 	"github.com/kelseykm/kelcryptor/colour"
 	"github.com/kelseykm/kelcryptor/errors"
+	"golang.org/x/term"
 )
 
-func scanPassword() (string, error) {
-	reader := bufio.NewReader(os.Stdin)
+func scanPassword() ([]byte, error) {
 
 	fmt.Printf("%s %s",
 		colour.Input(),
 		colour.Message("Enter password: "),
 	)
-	fmt.Printf("%s", colour.Invisible)
-	password, err := reader.ReadString('\n')
-	fmt.Printf("%s", colour.Normal)
+	password, err := term.ReadPassword(int(syscall.Stdin))
+	fmt.Println()
 	if err != nil {
-		fmt.Println()
-		return "", errors.GenericError{err.Error()}
+		return nil, errors.GenericError{err.Error()}
 	}
-
-	// remove the trailing newline
-	password = password[:len(password)-1]
 
 	fmt.Printf("%s %s",
 		colour.Input(),
 		colour.Message("Repeat password: "),
 	)
-	fmt.Printf("%s", colour.Invisible)
-	passwordConfirm, err := reader.ReadString('\n')
-	fmt.Printf("%s", colour.Normal)
+	passwordConfirm, err := term.ReadPassword(int(syscall.Stdin))
+	fmt.Println()
 	if err != nil {
-		fmt.Println()
-		return "", errors.GenericError{err.Error()}
+		return nil, errors.GenericError{err.Error()}
 	}
 
-	// remove the trailing newline
-	passwordConfirm = passwordConfirm[:len(passwordConfirm)-1]
-
-	if password != passwordConfirm {
-		return "", errors.MismatchedPasswordError{}
+	if !bytes.Equal(password, passwordConfirm) {
+		return nil, errors.MismatchedPasswordError{}
 	}
 
 	return password, nil
