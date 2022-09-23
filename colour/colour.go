@@ -2,35 +2,37 @@ package colour
 
 import "fmt"
 
+const esc = 27 // \033
+
 // Exported colours
-const (
-	Normal        = "\033[0m"
-	Bold          = "\033[1m"
-	Italic        = "\033[3m"
-	Underline     = "\033[4m"
-	Blink         = "\033[5m"
-	Invert        = "\033[7m"
-	Invisible     = "\033[8m"
-	StrikeThrough = "\033[9m"
-	Overwrite     = "\033[2K" + "\r"
+var (
+	Normal        = []byte{esc, '[', '0', 'm'}
+	Bold          = []byte{esc, '[', '1', 'm'}
+	Italic        = []byte{esc, '[', '3', 'm'}
+	Underline     = []byte{esc, '[', '4', 'm'}
+	Blink         = []byte{esc, '[', '5', 'm'}
+	Invert        = []byte{esc, '[', '7', 'm'}
+	Invisible     = []byte{esc, '[', '8', 'm'}
+	StrikeThrough = []byte{esc, '[', '9', 'm'}
+	Overwrite     = []byte{esc, '[', '2', 'K', '\r'}
 
-	Black   = "\033[30m"
-	Red     = "\033[31m"
-	Green   = "\033[32m"
-	Yellow  = "\033[33m"
-	Blue    = "\033[34m"
-	Magenta = "\033[35m"
-	Cyan    = "\033[36m"
-	White   = "\033[37m"
+	Black   = []byte{esc, '[', '3', '0', 'm'}
+	Red     = []byte{esc, '[', '3', '1', 'm'}
+	Green   = []byte{esc, '[', '3', '2', 'm'}
+	Yellow  = []byte{esc, '[', '3', '3', 'm'}
+	Blue    = []byte{esc, '[', '3', '4', 'm'}
+	Magenta = []byte{esc, '[', '3', '5', 'm'}
+	Cyan    = []byte{esc, '[', '3', '6', 'm'}
+	White   = []byte{esc, '[', '3', '7', 'm'}
 
-	BlackBackground   = "\033[40m"
-	RedBackground     = "\033[41m"
-	GreenBackground   = "\033[42m"
-	YellowBackground  = "\033[43m"
-	BlueBackground    = "\033[44m"
-	MagentaBackground = "\033[45m"
-	CyanBackground    = "\033[46m"
-	WhiteBackground   = "\033[47m"
+	BlackBackground   = []byte{esc, '[', '4', '0', 'm'}
+	RedBackground     = []byte{esc, '[', '4', '1', 'm'}
+	GreenBackground   = []byte{esc, '[', '4', '2', 'm'}
+	YellowBackground  = []byte{esc, '[', '4', '3', 'm'}
+	BlueBackground    = []byte{esc, '[', '4', '4', 'm'}
+	MagentaBackground = []byte{esc, '[', '4', '5', 'm'}
+	CyanBackground    = []byte{esc, '[', '4', '6', 'm'}
+	WhiteBackground   = []byte{esc, '[', '4', '7', 'm'}
 )
 
 // Info returns a formatted info banner
