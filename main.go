@@ -31,14 +31,14 @@ func main() {
 		files = cleanFiles
 	}
 
-	password, err := func() (string, error) {
+	password, err := func() ([]byte, error) {
 		var acceptableError errors.MismatchedPasswordError
 		for {
 			password, err := scanPassword()
 			if err == nil {
 				return password, nil
 			} else if err != acceptableError {
-				return "", err
+				return nil, err
 			}
 			fmt.Println(err.Error())
 		}

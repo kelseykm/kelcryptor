@@ -41,13 +41,13 @@ func getKey(password, salt []byte, size int) ([]byte, []byte, error) {
 
 // EncryptFile encrypts the src using a key derived from the password
 // and writes the encrypted file to dest
-func EncryptFile(password, src string) error {
-	key, salt, err := getKey([]byte(password), nil, keySize)
+func EncryptFile(password []byte, src string) error {
+	key, salt, err := getKey(password, nil, keySize)
 	if err != nil {
 		return errors.GenericError{err.Error()}
 	}
 
-	passwordHash, passwordSalt, err := getKey([]byte(password), nil, passwordHashSize)
+	passwordHash, passwordSalt, err := getKey(password, nil, passwordHashSize)
 	if err != nil {
 		return errors.GenericError{err.Error()}
 	}
@@ -160,7 +160,7 @@ func EncryptFile(password, src string) error {
 
 // DecryptFile decrypts the src with a key derived from
 // the password and writes the decrypted file to the dest
-func DecryptFile(password, src string) error {
+func DecryptFile(password []byte, src string) error {
 	file, err := os.Open(src)
 	if err != nil {
 		return errors.GenericError{err.Error()}
@@ -185,7 +185,7 @@ func DecryptFile(password, src string) error {
 		return errors.GenericError{err.Error()}
 	}
 
-	compPasswordHash, _, err := getKey([]byte(password), passwordSalt, passwordSaltSize)
+	compPasswordHash, _, err := getKey(password, passwordSalt, passwordSaltSize)
 	if err != nil {
 		return errors.GenericError{err.Error()}
 	}
@@ -232,7 +232,7 @@ func DecryptFile(password, src string) error {
 	}
 	defer destFile.Close()
 
-	key, _, err := getKey([]byte(password), salt, keySize)
+	key, _, err := getKey(password, salt, keySize)
 	if err != nil {
 		return errors.GenericError{err.Error()}
 	}
