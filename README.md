@@ -1,6 +1,6 @@
-![kelcryptor](./assets/banner.png)
-
 # kelcryptor
+
+![kelcryptor](./assets/banner.png)
 
 A commandline file encryption and decryption application, written in [Go](https://go.dev).
 
