@@ -2,7 +2,7 @@
 
 # kelcryptor
 
-A commandline file encryption and decryption application, written in [Go](https://golang.org).
+A commandline file encryption and decryption application, written in [Go](https://go.dev).
 
 ## Features
 
@@ -17,4 +17,10 @@ A commandline file encryption and decryption application, written in [Go](https:
 
 ## Installation
 
-Run `make` in the project root and add the resulting `kelcryptor` binary to your `$PATH`
+`go install -ldflags="-s -w" github.com/kelseykm/kelcryptor`
+
+You can also clone this repository and run `make install` at the repository root
+
+### Local build
+
+Clone this repository and run `make` at the repository root
