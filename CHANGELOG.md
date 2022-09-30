@@ -1,8 +1,12 @@
 # Changelog
 
-## [2.0.0] - 2022-09-23
+## [2.0.1] - 2022-09-30
 
-### Changed
+- Minor code refactors
+- Add `install` target to makefile
+- Remove third level headings from changelog
+
+## [2.0.0] - 2022-09-23
 
 - Remove trailing newline from scanned password
 - Use `ReadPassword` function from `term` package to read password
@@ -12,14 +16,10 @@
 
 ## [1.2.0] - 2022-09-18
 
-### Added
-
 - Add `errors` package to contain all errors
 - Add "Error" suffix to names of all errors
 
 ## [1.1.0] - 2022-09-13
-
-### Added
 
 - Add version flag
 
