@@ -190,7 +190,7 @@ func DecryptFile(password []byte, src string) error {
 		return errors.GenericError{err.Error()}
 	}
 
-	if eq := hmac.Equal(compPasswordHash, passwordHash); !eq {
+	if !hmac.Equal(compPasswordHash, passwordHash) {
 		return errors.WrongPasswordError{}
 	}
 
@@ -278,7 +278,7 @@ func DecryptFile(password []byte, src string) error {
 	close(chunksDecryptedChannel)
 
 	computedHmac := hmacHash.Sum(nil)
-	if fileAuthentic := hmac.Equal(storedHmac, computedHmac); !fileAuthentic {
+	if !hmac.Equal(storedHmac, computedHmac) {
 		return errors.FileModifiedError{}
 	}
 
