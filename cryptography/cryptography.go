@@ -34,7 +34,7 @@ func getKey(password, salt []byte, size int) ([]byte, []byte, error) {
 
 	key, err := scrypt.Key(password, salt, 1<<15, 8, 1, size)
 	if err != nil {
-		return nil, nil, errors.GenericError{err.Error()}
+		return nil, nil, errors.GenericError{Message: err.Error()}
 	}
 	return key, salt, nil
 }
@@ -44,26 +44,26 @@ func getKey(password, salt []byte, size int) ([]byte, []byte, error) {
 func EncryptFile(password []byte, src string) error {
 	key, salt, err := getKey(password, nil, keySize)
 	if err != nil {
-		return errors.GenericError{err.Error()}
+		return errors.GenericError{Message: err.Error()}
 	}
 
 	passwordHash, passwordSalt, err := getKey(password, nil, passwordHashSize)
 	if err != nil {
-		return errors.GenericError{err.Error()}
+		return errors.GenericError{Message: err.Error()}
 	}
 
 	hmacHash := hmac.New(sha256.New, key)
 
 	file, err := os.Open(src)
 	if err != nil {
-		return errors.GenericError{err.Error()}
+		return errors.GenericError{Message: err.Error()}
 	}
 	defer file.Close()
 
 	dest := src + ".enc"
 	destFile, err := os.Create(dest)
 	if err != nil {
-		return errors.GenericError{err.Error()}
+		return errors.GenericError{Message: err.Error()}
 	}
 	defer destFile.Close()
 
@@ -73,7 +73,7 @@ func EncryptFile(password []byte, src string) error {
 
 	fileInfo, err := file.Stat()
 	if err != nil {
-		return errors.GenericError{err.Error()}
+		return errors.GenericError{Message: err.Error()}
 	}
 	fileSize := fileInfo.Size()
 
@@ -89,27 +89,27 @@ func EncryptFile(password []byte, src string) error {
 	// make space for file hmac
 	_, err = destFile.Write(make([]byte, fileHmacSize))
 	if err != nil {
-		return errors.GenericError{err.Error()}
+		return errors.GenericError{Message: err.Error()}
 	}
 
 	_, err = destFile.Write(passwordHash)
 	if err != nil {
-		return errors.GenericError{err.Error()}
+		return errors.GenericError{Message: err.Error()}
 	}
 
 	_, err = destFile.Write(passwordSalt)
 	if err != nil {
-		return errors.GenericError{err.Error()}
+		return errors.GenericError{Message: err.Error()}
 	}
 
 	_, err = destFile.Write(salt)
 	if err != nil {
-		return errors.GenericError{err.Error()}
+		return errors.GenericError{Message: err.Error()}
 	}
 
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return errors.GenericError{err.Error()}
+		return errors.GenericError{Message: err.Error()}
 	}
 
 	buffer := make([]byte, chunkSize)
@@ -118,14 +118,14 @@ func EncryptFile(password []byte, src string) error {
 		if err == io.EOF {
 			break
 		} else if err != nil {
-			return errors.GenericError{err.Error()}
+			return errors.GenericError{Message: err.Error()}
 		}
 
 		hmacHash.Write(buffer[:nRead])
 
 		aead, err := cipher.NewGCM(block)
 		if err != nil {
-			return errors.GenericError{err.Error()}
+			return errors.GenericError{Message: err.Error()}
 		}
 
 		nonce := make([]byte, nonceSize)
@@ -133,14 +133,14 @@ func EncryptFile(password []byte, src string) error {
 
 		_, err = destFile.Write(nonce)
 		if err != nil {
-			return errors.GenericError{err.Error()}
+			return errors.GenericError{Message: err.Error()}
 		}
 
 		encryptedBuffer := aead.Seal(nil, nonce, buffer[:nRead], nil)
 
 		_, err = destFile.Write(encryptedBuffer)
 		if err != nil {
-			return errors.GenericError{err.Error()}
+			return errors.GenericError{Message: err.Error()}
 		}
 
 		chunksEncryptedChannel <- nRead
@@ -152,7 +152,7 @@ func EncryptFile(password []byte, src string) error {
 	destFile.Seek(0, 0)
 	_, err = destFile.Write(computedHmac)
 	if err != nil {
-		return errors.GenericError{err.Error()}
+		return errors.GenericError{Message: err.Error()}
 	}
 
 	return nil
@@ -163,31 +163,31 @@ func EncryptFile(password []byte, src string) error {
 func DecryptFile(password []byte, src string) error {
 	file, err := os.Open(src)
 	if err != nil {
-		return errors.GenericError{err.Error()}
+		return errors.GenericError{Message: err.Error()}
 	}
 	defer file.Close()
 
 	storedHmac := make([]byte, fileHmacSize)
 	_, err = file.Read(storedHmac)
 	if err != nil {
-		return errors.GenericError{err.Error()}
+		return errors.GenericError{Message: err.Error()}
 	}
 
 	passwordHash := make([]byte, passwordHashSize)
 	_, err = file.Read(passwordHash)
 	if err != nil {
-		return errors.GenericError{err.Error()}
+		return errors.GenericError{Message: err.Error()}
 	}
 
 	passwordSalt := make([]byte, passwordSaltSize)
 	_, err = file.Read(passwordSalt)
 	if err != nil {
-		return errors.GenericError{err.Error()}
+		return errors.GenericError{Message: err.Error()}
 	}
 
 	compPasswordHash, _, err := getKey(password, passwordSalt, passwordSaltSize)
 	if err != nil {
-		return errors.GenericError{err.Error()}
+		return errors.GenericError{Message: err.Error()}
 	}
 
 	if !hmac.Equal(compPasswordHash, passwordHash) {
@@ -197,7 +197,7 @@ func DecryptFile(password []byte, src string) error {
 	salt := make([]byte, saltSize)
 	_, err = file.Read(salt)
 	if err != nil {
-		return errors.GenericError{err.Error()}
+		return errors.GenericError{Message: err.Error()}
 	}
 
 	var dest string
@@ -213,7 +213,7 @@ func DecryptFile(password []byte, src string) error {
 
 	fileInfo, err := file.Stat()
 	if err != nil {
-		return errors.GenericError{err.Error()}
+		return errors.GenericError{Message: err.Error()}
 	}
 	fileSize := fileInfo.Size()
 
@@ -228,20 +228,20 @@ func DecryptFile(password []byte, src string) error {
 
 	destFile, err := os.Create(dest)
 	if err != nil {
-		return errors.GenericError{err.Error()}
+		return errors.GenericError{Message: err.Error()}
 	}
 	defer destFile.Close()
 
 	key, _, err := getKey(password, salt, keySize)
 	if err != nil {
-		return errors.GenericError{err.Error()}
+		return errors.GenericError{Message: err.Error()}
 	}
 
 	hmacHash := hmac.New(sha256.New, key)
 
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return errors.GenericError{err.Error()}
+		return errors.GenericError{Message: err.Error()}
 	}
 
 	buffer := make([]byte, chunkSize+nonceSize+tagSize)
@@ -250,12 +250,12 @@ func DecryptFile(password []byte, src string) error {
 		if err == io.EOF {
 			break
 		} else if err != nil {
-			return errors.GenericError{err.Error()}
+			return errors.GenericError{Message: err.Error()}
 		}
 
 		aead, err := cipher.NewGCM(block)
 		if err != nil {
-			return errors.GenericError{err.Error()}
+			return errors.GenericError{Message: err.Error()}
 		}
 
 		nonce := buffer[:nonceSize]
@@ -269,7 +269,7 @@ func DecryptFile(password []byte, src string) error {
 
 		_, err = destFile.Write(decryptedBuffer)
 		if err != nil {
-			return errors.GenericError{err.Error()}
+			return errors.GenericError{Message: err.Error()}
 		}
 
 		chunksDecryptedChannel <- nRead

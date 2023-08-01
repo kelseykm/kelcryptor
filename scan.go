@@ -19,7 +19,7 @@ func scanPassword() ([]byte, error) {
 	password, err := term.ReadPassword(int(syscall.Stdin))
 	fmt.Println()
 	if err != nil {
-		return nil, errors.GenericError{err.Error()}
+		return nil, errors.GenericError{Message: err.Error()}
 	}
 
 	fmt.Printf("%s %s",
@@ -29,7 +29,7 @@ func scanPassword() ([]byte, error) {
 	passwordConfirm, err := term.ReadPassword(int(syscall.Stdin))
 	fmt.Println()
 	if err != nil {
-		return nil, errors.GenericError{err.Error()}
+		return nil, errors.GenericError{Message: err.Error()}
 	}
 
 	if !bytes.Equal(password, passwordConfirm) {
