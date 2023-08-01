@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.2] - 2023-08-01
+
+- Allow use of flags at any point in arguments, not just the beginning
+- Use keyed fields in `errors.GenericError` struct literals
+- Update packages
+- Use cloud image source for banner in README
+
 ## [2.0.1] - 2022-09-30
 
 - Minor code refactors
