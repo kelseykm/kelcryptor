@@ -67,6 +67,22 @@ func parseFlags() (ignore, timeTaken, encrypt, decrypt bool, files []string) {
 }
 
 func init() {
+	var flags []string
+	var nonFlags []string
+
+	for _, arg := range os.Args[1:] {
+		if arg[0] == '-' {
+			flags = append(flags, arg)
+		} else {
+			nonFlags = append(nonFlags, arg)
+		}
+	}
+
+	args := append([]string{os.Args[0]}, flags...)
+	args = append(args, nonFlags...)
+
+	os.Args = args
+
 	flag.Usage = func() {
 		fmt.Fprintf(
 			flag.CommandLine.Output(),
