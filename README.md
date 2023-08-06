@@ -17,9 +17,11 @@ A commandline file encryption and decryption application, written in [Go](https:
 
 ## Installation
 
-`go install -ldflags="-s -w" github.com/kelseykm/kelcryptor`
+Clone this repository and run `make install` at the repository root
 
-You can also clone this repository and run `make install` at the repository root
+> Installation via the go module system (e.g. `go install`, or `go get`)
+> currently installs outdated versions of kelcryptor. Please use the method
+> stated above.
 
 ### Local build
 
