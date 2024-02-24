@@ -41,7 +41,7 @@ func parseFlags() (ignore, timeTaken, encrypt, decrypt bool, files []string) {
 			colour.Error,
 			colour.Message("file(s) to be decrypted/encrypted not provided\n\n"),
 		)
-		fmt.Fprintf(flag.CommandLine.Output(), errorString)
+		fmt.Print(errorString)
 		flag.Usage()
 		os.Exit(2)
 	} else if encryptFlag && decryptFlag {
@@ -50,7 +50,7 @@ func parseFlags() (ignore, timeTaken, encrypt, decrypt bool, files []string) {
 			colour.Error,
 			colour.Message("cannot set both -decrypt and -encrypt\n\n"),
 		)
-		fmt.Fprintf(flag.CommandLine.Output(), errorString)
+		fmt.Print(errorString)
 		flag.Usage()
 		os.Exit(2)
 	} else if !encryptFlag && !decryptFlag {
@@ -59,7 +59,7 @@ func parseFlags() (ignore, timeTaken, encrypt, decrypt bool, files []string) {
 			colour.Error,
 			colour.Message("either -decrypt or -encrypt must be set\n\n"),
 		)
-		fmt.Fprintf(flag.CommandLine.Output(), errorString)
+		fmt.Print(errorString)
 		flag.Usage()
 		os.Exit(2)
 	}
@@ -84,8 +84,7 @@ func init() {
 	os.Args = args
 
 	flag.Usage = func() {
-		fmt.Fprintf(
-			flag.CommandLine.Output(),
+		fmt.Print(
 			"usage: kelcryptor [-h|-help] [-v|-version] [-i|-ignore] [[-e|-encrypt]|[-d|-decrypt]] [-t|-time] FILE [FILE ...]\n\n",
 		)
 		flag.PrintDefaults()
