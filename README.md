@@ -19,10 +19,16 @@ A commandline file encryption and decryption application, written in [Go](https:
 
 Clone this repository and run `make install` at the repository root
 
-> Installation via the go module system (e.g. `go install`, or `go get`)
-> currently installs outdated versions of kelcryptor. Please use the method
-> stated above.
+> Installation via the go module system (e.g. `go install kelcryptor`, or `go get kelcryptor`
+> ) currently installs outdated versions of kelcryptor. Please
+> use the method stated above.
+
+If on Windows and/or without Makefile Tools, run the following command instead:
+`go install -ldflags="-s -w"`
 
 ### Local build
 
 Clone this repository and run `make` at the repository root
+
+If on Windows and/or without Makefile Tools, run the following command instead:
+`go build -ldflags="-s -w"`
