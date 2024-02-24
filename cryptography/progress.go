@@ -2,12 +2,23 @@ package cryptography
 
 import (
 	"fmt"
+	"os"
+	"strings"
 	"sync"
 
 	"github.com/kelseykm/kelcryptor/colour"
+	"golang.org/x/term"
 )
 
 func printProgress(wg *sync.WaitGroup, fileName string, operation byte, totalSize int64, ch <-chan int) {
+	var terminalWidth int
+
+	if width, _, err := term.GetSize(int(os.Stdout.Fd())); err != nil {
+		terminalWidth = 100
+	} else {
+		terminalWidth = width
+	}
+
 	var operationVerb string
 
 	switch operation {
@@ -17,12 +28,15 @@ func printProgress(wg *sync.WaitGroup, fileName string, operation byte, totalSiz
 		operationVerb = "decrypted"
 	}
 
-	defer fmt.Printf("%s%s %s %s\n",
-		colour.Overwrite,
-		colour.Info(),
+	finalMesg := fmt.Sprintf("\r%s %s %s",
+		colour.Info,
 		colour.FileName(fileName),
 		colour.Message(operationVerb),
 	)
+
+	finalMesgExtraSpaces := terminalWidth - len(finalMesg)
+
+	defer fmt.Printf("%s%s\n", finalMesg, strings.Repeat(" ", finalMesgExtraSpaces))
 
 	defer wg.Done()
 
@@ -37,11 +51,14 @@ func printProgress(wg *sync.WaitGroup, fileName string, operation byte, totalSiz
 			operationVerb,
 		)
 
-		fmt.Printf("%s%s %s %s",
-			colour.Overwrite,
-			colour.Info(),
+		fullMesg := fmt.Sprintf("\r%s %s %s",
+			colour.Info,
 			colour.Message(mesg),
 			colour.FileName(fileName),
 		)
+
+		extraSpaces := terminalWidth - len(fullMesg)
+
+		fmt.Printf("%s%s", fullMesg, strings.Repeat(" ", extraSpaces))
 	}
 }
