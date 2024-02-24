@@ -11,7 +11,7 @@ type MismatchedPasswordError struct{}
 
 func (m MismatchedPasswordError) Error() string {
 	return fmt.Sprintf("%s %s",
-		colour.Error(),
+		colour.Error,
 		colour.Message("Passwords do not match"),
 	)
 }
@@ -21,7 +21,7 @@ type GenericError struct{ Message string }
 
 func (g GenericError) Error() string {
 	return fmt.Sprintf("%s %s",
-		colour.Error(),
+		colour.Error,
 		colour.Message(g.Message),
 	)
 }
@@ -43,7 +43,7 @@ type WrongPasswordError struct{}
 
 func (w WrongPasswordError) Error() string {
 	return fmt.Sprintf("%s %s",
-		colour.Error(),
+		colour.Error,
 		colour.Message("Incorrect password"),
 	)
 }
@@ -53,7 +53,7 @@ type FileModifiedError struct{}
 
 func (f FileModifiedError) Error() string {
 	return fmt.Sprintf("%s %s",
-		colour.Error(),
+		colour.Error,
 		colour.Message("File interity compromised"),
 	)
 }

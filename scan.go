@@ -13,7 +13,7 @@ import (
 func scanPassword() ([]byte, error) {
 
 	fmt.Printf("%s %s",
-		colour.Input(),
+		colour.Input,
 		colour.Message("Enter password: "),
 	)
 	password, err := term.ReadPassword(int(syscall.Stdin))
@@ -23,7 +23,7 @@ func scanPassword() ([]byte, error) {
 	}
 
 	fmt.Printf("%s %s",
-		colour.Input(),
+		colour.Input,
 		colour.Message("Repeat password: "),
 	)
 	passwordConfirm, err := term.ReadPassword(int(syscall.Stdin))

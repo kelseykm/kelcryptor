@@ -29,7 +29,7 @@ func verifyFiles(files []string) ([]string, error) {
 		badFilesErr.AddToMesg(
 			fmt.Sprintf(
 				"%s %s",
-				colour.Error(),
+				colour.Error,
 				colour.Message("Some files do not exist:\n"),
 			))
 
@@ -52,7 +52,7 @@ func verifyFiles(files []string) ([]string, error) {
 		badFilesErr.AddToMesg(
 			fmt.Sprintf(
 				"%s %s",
-				colour.Error(),
+				colour.Error,
 				colour.Message("Some files are not regular files:\n"),
 			))
 

@@ -76,7 +76,7 @@ func main() {
 				timeTaken := time.Since(start).Seconds()
 
 				fmt.Printf("%s %s %s %s %s\n",
-					colour.Info(),
+					colour.Info,
 					colour.Message("Done in"),
 					colour.Time(timeTaken),
 					colour.Message("seconds:"),
@@ -110,7 +110,7 @@ func main() {
 				timeTaken := time.Since(start).Seconds()
 
 				fmt.Printf("%s %s %s %s %s\n",
-					colour.Info(),
+					colour.Info,
 					colour.Message("Done in"),
 					colour.Time(timeTaken),
 					colour.Message("seconds:"),

@@ -21,7 +21,7 @@ func parseFlags() (ignore, timeTaken, encrypt, decrypt bool, files []string) {
 		fmt.Fprintf(
 			flag.CommandLine.Output(),
 			"%s %s\n",
-			colour.Info(),
+			colour.Info,
 			colour.Message("v"+version),
 		)
 		os.Exit(0)
@@ -38,7 +38,7 @@ func parseFlags() (ignore, timeTaken, encrypt, decrypt bool, files []string) {
 	if len(files) == 0 {
 		errorString = fmt.Sprintf(
 			"%s %s",
-			colour.Error(),
+			colour.Error,
 			colour.Message("file(s) to be decrypted/encrypted not provided\n\n"),
 		)
 		fmt.Fprintf(flag.CommandLine.Output(), errorString)
@@ -47,7 +47,7 @@ func parseFlags() (ignore, timeTaken, encrypt, decrypt bool, files []string) {
 	} else if encryptFlag && decryptFlag {
 		errorString = fmt.Sprintf(
 			"%s %s",
-			colour.Error(),
+			colour.Error,
 			colour.Message("cannot set both -decrypt and -encrypt\n\n"),
 		)
 		fmt.Fprintf(flag.CommandLine.Output(), errorString)
@@ -56,7 +56,7 @@ func parseFlags() (ignore, timeTaken, encrypt, decrypt bool, files []string) {
 	} else if !encryptFlag && !decryptFlag {
 		errorString = fmt.Sprintf(
 			"%s %s",
-			colour.Error(),
+			colour.Error,
 			colour.Message("either -decrypt or -encrypt must be set\n\n"),
 		)
 		fmt.Fprintf(flag.CommandLine.Output(), errorString)
