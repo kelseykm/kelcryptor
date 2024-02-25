@@ -1,9 +1,14 @@
 # Changelog
 
+## [2.0.4] - 2024-02-25
+
+- Fix extra spaces added to erase line when terminal width is less than line to
+be written
+
 ## [2.0.3] - 2024-02-24
 
 - Rewrite colour package to use functions from fatih/color for terminal
-  agnosticness
+agnosticness
 
 ## [2.0.2] - 2023-08-01
 
