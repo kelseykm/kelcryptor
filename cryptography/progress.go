@@ -34,7 +34,11 @@ func printProgress(wg *sync.WaitGroup, fileName string, operation byte, totalSiz
 		colour.Message(operationVerb),
 	)
 
-	finalMesgExtraSpaces := terminalWidth - len(finalMesg)
+	var finalMesgExtraSpaces int
+	finalMesgExtraSpaces = terminalWidth - len(finalMesg)
+	if finalMesgExtraSpaces < 0 {
+		finalMesgExtraSpaces = terminalWidth
+	}
 
 	defer fmt.Printf("%s%s\n", finalMesg, strings.Repeat(" ", finalMesgExtraSpaces))
 
@@ -57,7 +61,11 @@ func printProgress(wg *sync.WaitGroup, fileName string, operation byte, totalSiz
 			colour.FileName(fileName),
 		)
 
-		extraSpaces := terminalWidth - len(fullMesg)
+		var extraSpaces int
+		extraSpaces = terminalWidth - len(fullMesg)
+		if extraSpaces < 0 {
+			extraSpaces = terminalWidth
+		}
 
 		fmt.Printf("%s%s", fullMesg, strings.Repeat(" ", extraSpaces))
 	}
